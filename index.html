@@ -367,6 +367,19 @@
               return false;
             }
           },
+          filteredLessons() {
+            const filteredLessons = this.lessons.filter((elem) => {
+              return (
+                elem.title
+                  .toLowerCase()
+                  .includes(this.searchTerm.toLowerCase()) ||
+                elem.location
+                  .toLowerCase()
+                  .includes(this.searchTerm.toLowerCase())
+              );
+            });
+            return filteredLessons;
+          },
           isOrderBtnDisabled() {
             const validText = /^[a-zA-Z]+$/;
             const validNumber = /^[0-9]+$/;
