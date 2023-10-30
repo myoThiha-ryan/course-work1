@@ -96,6 +96,66 @@
           </div>
           <div v-else>
             <h4>Welcome to Checkout Page</h4>
+            <div class="row column-gap-5 row-gap-3 mb-5">
+              <div
+                class="card column"
+                style="width: 18rem"
+                v-for="lesson in lessonsToCheckout"
+              >
+                <img
+                  class="card-img-top"
+                  v-bind:src="lesson.image"
+                  v-bind:alt="lesson.altImage"
+                />
+                <div class="card-body">
+                  <h5 class="card-title">{{lesson.title}}</h5>
+                  <p class="card-text">{{lesson.description}}</p>
+                  <p class="card-text">Fees: {{lesson.price}}</p>
+                  <p class="card-text">Available: {{lesson.availability}}</p>
+                  <button
+                    class="btn btn-danger"
+                    v-on:click="removeFromCart(lesson)"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="mb-5">
+              <h6>Enter checkout Information</h6>
+              <div class="col-md-6">
+                <strong>Name:</strong>
+                <input v-model="order.name" class="form-control" />
+              </div>
+              <div class="col-md-6">
+                <strong>Phone number:</strong>
+                <input v-model="order.phoneNumber" class="form-control" />
+              </div>
+            </div>
+            <div>
+              <h6>Confirm checkout Information</h6>
+              <div class="col-md-6 mb-3">
+                <div class="mb-3">
+                  <strong>Name: </strong>
+                  <span>{{order.name}}</span>
+                </div>
+                <div>
+                  <strong>Phone number: </strong>
+                  <span>{{order.phoneNumber}}</span>
+                </div>
+              </div>
+              <button
+                class="btn btn-primary"
+                v-on:click="placeOrder"
+                v-if="isOrderBtnDisabled"
+                disabled
+              >
+                Confirm
+              </button>
+              <button class="btn btn-primary" v-on:click="placeOrder" v-else>
+                Confirm
+              </button>
+            </div>
           </div>
         </div>
       </main>
@@ -125,6 +185,21 @@
           displayCheckoutPage() {
             this.displayProduct = !this.displayProduct;
           },
+          removeFromCart(aLesson) {
+            const lessonIdToRemove = this.cart.find((elem) => {
+              return elem === aLesson.id;
+            });
+            const lessonIndexToRemove = this.cart.indexOf(lessonIdToRemove);
+            this.cart.splice(lessonIndexToRemove, 1);
+            this.lessons.forEach((elem) => {
+              if (elem.id === lessonIdToRemove) {
+                elem.availability++;
+              }
+            });
+            if (this.cart.length === 0) {
+              this.displayProduct = true;
+            }
+          },
         },
         computed: {
           cartItemCount() {
@@ -132,6 +207,17 @@
           },
           isCheckoutDisabled() {
             return this.cart.length == 0;
+          },
+          lessonsToCheckout() {
+            const lessonsToCheckout = [];
+            this.lessons.forEach((lesson) =>
+              this.cart.forEach((element) => {
+                if (lesson.id === element) {
+                  lessonsToCheckout.push(lesson);
+                }
+              })
+            );
+            return lessonsToCheckout;
           },
           displayCheckOutPage() {
             if (!cart.length) {
