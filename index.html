@@ -28,7 +28,78 @@
     <!-- bootstrap JavaScript CDN -->
   </head>
   <body>
-    <div id="app" class="pt-3 pe-4 ms-5"></div>
+    <div id="app" class="pt-3 pe-4 ms-5">
+      <header class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+          <h1>After School Lesson</h1>
+        </div>
+        <div>
+          <button class="btn btn-primary" disabled v-if="isCheckoutDisabled">
+            <i class="fa-solid fa-cart-shopping position-relative">
+              <span
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                >{{cartItemCount}}</span
+              >
+            </i>
+            <span>Checkout</span>
+          </button>
+          <button
+            class="btn btn-primary"
+            v-on:click="displayCheckoutPage"
+            v-else
+          >
+            <i class="fa-solid fa-cart-shopping position-relative">
+              <span
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                >{{cartItemCount}}</span
+              >
+            </i>
+            <span>&nbsp Checkout</span>
+          </button>
+        </div>
+      </header>
+      <main>
+        <div class="pageContainer">
+          <div class="row column-gap-5 row-gap-3" v-if="displayProduct">
+            <div
+              class="card column"
+              style="width: 18rem"
+              v-for="lesson in filteredLessons"
+            >
+              <img
+                class="card-img-top"
+                v-bind:src="lesson.image"
+                v-bind:alt="lesson.altImage"
+              />
+              <div class="card-body">
+                <h5 class="card-title">{{lesson.title}}</h5>
+                <p class="card-text">{{lesson.description}}</p>
+                <p class="card-text">Fees: &#163;{{lesson.price}}</p>
+                <p class="card-text">Location: {{lesson.location}}</p>
+                <p class="card-text">Available: {{lesson.availability}}</p>
+                <button
+                  class="btn btn-primary"
+                  disabled
+                  v-if="isAddToCartDisabled(lesson)"
+                >
+                  Add to Cart
+                </button>
+                <button
+                  class="btn btn-primary"
+                  v-on:click="addToCart(lesson)"
+                  v-else
+                >
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          </div>
+          <div v-else>
+            <h4>Welcome to Checkout Page</h4>
+          </div>
+        </div>
+      </main>
+    </div>
     <script>
       let webstore = new Vue({
         el: "#app",
@@ -42,6 +113,36 @@
           lessons: [],
           sortCategory: "title",
           searchTerm: "",
+        },
+        methods: {
+          isAddToCartDisabled(aLesson) {
+            return aLesson.availability == 0;
+          },
+          addToCart(aLesson) {
+            aLesson.availability--;
+            this.cart.push(aLesson.id);
+          },
+          displayCheckoutPage() {
+            this.displayProduct = !this.displayProduct;
+          },
+        },
+        computed: {
+          cartItemCount() {
+            return this.cart.length || "";
+          },
+          isCheckoutDisabled() {
+            return this.cart.length == 0;
+          },
+          displayCheckOutPage() {
+            if (!cart.length) {
+              return false;
+            }
+          },
+        },
+        created: function () {
+          axios.get("./lessons.json").then((response) => {
+            this.lessons = response.data.lessons;
+          });
         },
       });
     </script>
