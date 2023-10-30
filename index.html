@@ -185,7 +185,17 @@
           displayCheckoutPage() {
             this.displayProduct = !this.displayProduct;
           },
-          removeFromCart() {
+          removeFromCart(aLesson) {
+            const lessonIdToRemove = this.cart.find((elem) => {
+              return elem === aLesson.id;
+            });
+            const lessonIndexToRemove = this.cart.indexOf(lessonIdToRemove);
+            this.cart.splice(lessonIndexToRemove, 1);
+            this.lessons.forEach((elem) => {
+              if (elem.id === lessonIdToRemove) {
+                elem.availability++;
+              }
+            });
             if (this.cart.length === 0) {
               this.displayProduct = true;
             }
@@ -218,9 +228,17 @@
             }
           },
           isOrderBtnDisabled() {
+            const validText = /^[a-zA-Z]+$/;
+            const validNumber = /^[0-9]+$/;
             if (
               this.order.name.length === 0 ||
               this.order.phoneNumber.length === 0
+            ) {
+              return true;
+            }
+            if (
+              !validText.test(this.order.name) ||
+              !validNumber.test(this.order.phoneNumber)
             ) {
               return true;
             }
