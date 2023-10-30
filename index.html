@@ -185,20 +185,13 @@
           displayCheckoutPage() {
             this.displayProduct = !this.displayProduct;
           },
-          removeFromCart(aLesson) {
-            const lessonIdToRemove = this.cart.find((elem) => {
-              return elem === aLesson.id;
-            });
-            const lessonIndexToRemove = this.cart.indexOf(lessonIdToRemove);
-            this.cart.splice(lessonIndexToRemove, 1);
-            this.lessons.forEach((elem) => {
-              if (elem.id === lessonIdToRemove) {
-                elem.availability++;
-              }
-            });
+          removeFromCart() {
             if (this.cart.length === 0) {
               this.displayProduct = true;
             }
+          },
+          placeOrder() {
+            alert("Congratulations! Your Purchase is Successful.");
           },
         },
         computed: {
@@ -222,6 +215,14 @@
           displayCheckOutPage() {
             if (!cart.length) {
               return false;
+            }
+          },
+          isOrderBtnDisabled() {
+            if (
+              this.order.name.length === 0 ||
+              this.order.phoneNumber.length === 0
+            ) {
+              return true;
             }
           },
         },
