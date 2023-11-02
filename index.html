@@ -25,6 +25,7 @@
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
       crossorigin="anonymous"
     ></script>
+    <script src="lessons.js"></script>
     <!-- bootstrap JavaScript CDN -->
   </head>
   <body>
@@ -244,7 +245,7 @@
             name: "",
             phoneNumber: "",
           },
-          lessons: [],
+          lessons,
           sortCategory: "title",
           searchTerm: "",
         },
@@ -396,11 +397,6 @@
               return true;
             }
           },
-        },
-        created: function () {
-          axios.get("./lessons.json").then((response) => {
-            this.lessons = response.data.lessons;
-          });
         },
       });
     </script>
