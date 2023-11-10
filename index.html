@@ -118,11 +118,7 @@
             </i>
             <span>Checkout</span>
           </button>
-          <button
-            class="btn btn-primary"
-            v-on:click="displayCheckoutPage"
-            v-else
-          >
+          <button class="btn btn-primary" v-on:click="togglePage" v-else>
             <i class="fa-solid fa-cart-shopping position-relative">
               <span
                 class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
@@ -258,7 +254,7 @@
             aLesson.availability--;
             this.cart.push(aLesson.id);
           },
-          displayCheckoutPage() {
+          togglePage() {
             this.displayProduct = !this.displayProduct;
           },
           sortAscending() {
@@ -363,11 +359,6 @@
               })
             );
             return lessonsToCheckout;
-          },
-          displayCheckOutPage() {
-            if (!cart.length) {
-              return false;
-            }
           },
           filteredLessons() {
             const filteredLessons = this.lessons.filter((elem) => {
